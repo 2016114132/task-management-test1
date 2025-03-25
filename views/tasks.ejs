@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="container">
+        <h1><%= title %></h1>
+
+        <form method="POST" action="/add-task">
+            <div class="input-group">
+                <label for="title">Title</label>
+                <input id="title" type="text" name="title" required />
+            </div>
+    
+            <div class="input-group">
+                <label for="description">Description</label>
+                <input id="description" type="text" name="description" required />
+            </div>
+    
+            <div class="input-group">
+              <button type="submit">+ Add Task</button>
+            </div>                
+        </form>
+        
+
+        <h2>Task List</h2>
+
+        <div class="table">
+          <div class="row header">
+            <div class="column col1">Title</div>
+            <div class="column col2">Description</div>
+            <div class="column col3">Actions</div>
+          </div>
+
+          <% tasks.forEach((item) => { %>
+          <div class="row <% if (item.completed) { %>completed<% } %>">
+            <div class="column col1"><%= item.title %></div>
+            <div class="column col2"><%= item.description %></div>
+            <div class="column col3">
+              <form method="POST" action="/toggle-task/<%= item.id %>">
+                <button class="complete" type="submit"><% if (item.completed) { %> Clear <% } else { %> Complete Task  <% } %></button>
+              </form>
+
+              <form method="POST" action="/delete-task/<%= item.id %>">
+                <button class="delete" type="submit">Delete</button>
+              </form>
+            </div>
+          </div>
+          <% }); %>
+
+        </div>
+
+        <% if (tasks.length == 0) { %>
+        <p>No Tasks Found</p>
+        <% } %>
+
+    </div>
+
+    
+    
+  </body>
+</html>
+
