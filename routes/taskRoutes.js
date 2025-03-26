@@ -1,4 +1,5 @@
 import express from "express"
+import { getAllTasks }  from "../models/taskModel.js";
 
 const router = express.Router();
 
@@ -9,10 +10,13 @@ let tasks = [];
 let tasksCounter = 1;
 
 // Route to show the form and task screen
-router.get("/", (req, res) => {
+router.get("/", async (req, res) => {
+    // TODO - Implement try/catch
+    const taskList = await getAllTasks();    
+
     res.render("tasks", {
         title: "Task Management",
-        tasks: tasks
+        tasks: taskList
     });
 });
 
