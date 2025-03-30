@@ -1,50 +1,65 @@
 import express from "express"
-import { getAllTasks }  from "../models/taskModel.js";
+import { getAllTasks, addNewTask }  from "../models/taskModel.js";
 
 const router = express.Router();
 
 // Variable to store tasks in memory
 let tasks = [];
 
-// Variable to generate new task ids
-let tasksCounter = 1;
-
 // Route to show the form and task screen
 router.get("/", async (req, res) => {
-    // TODO - Implement try/catch
-    const taskList = await getAllTasks();    
 
-    res.render("tasks", {
-        title: "Task Management",
-        tasks: taskList
-    });
+    try{
+        const taskList = await getAllTasks();    
+
+        res.render("tasks", {
+            title: "EZ Task Manager",
+            tasks: taskList
+        });
+    }catch(error){
+        res.status(500).send('An error occurred while getting the list of tasks.');
+    }    
+    
 });
 
 // Route that adds a task to the array
-router.post("/add-task", (req, res) => {
+router.post("/tasks", async (req, res) => {
     // Extract the data from the request body
     var { title, description } = req.body;
 
-    // Validate that data is valid
-    if(!title || !description){
-        res.status(400).send('Invalid title or description!');
-    }
-
-    // Push a task to the array
-    tasks.push(
-        {
-            id: tasksCounter,
-            title: title,
-            description: description,
-            completed: false
+    // We create a try/catch to capture any errors that might happen and handle it appropriately 
+    try{
+        // Title is required, validate it was sent
+        if(!title){
+            // return res.status(400).send('Title is required');   
+            throw new Error("Title is required");     
         }
-    );
 
-    // Increment the counter for the next task
-    tasksCounter++;
+        // Make sure that title is between 3-100
+        if(!(title.length >= 3 && title.length <= 100)){ 
+            throw new Error("Title must be between 3-100 characters");          
+        }
 
-    // Redirect back to '/'
-    res.redirect('/');
+        // Verify that description does not exceed 500 characters
+        if(description && description.length > 500){
+            throw new Error("Description cannot exceed 500 characters");          
+        }
+
+        // Once data is valid, create the new task
+        const newtask = await addNewTask(title, description);         
+
+        // Redirect back to '/'
+        res.redirect('/');
+    }catch(error) {
+        // When there is an error, rerender the page and pass the error message
+        const taskList = await getAllTasks();    
+
+        return res.render("tasks", {
+            title: "Task Management",
+            tasks: taskList,
+            error: error.message
+        });
+    }
 });
 
 // Route to toggle the completed status of a tag by id

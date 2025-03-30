@@ -1,19 +1,21 @@
 body {
     font-family: Arial, sans-serif;
-    padding: 1rem 2rem;
-    background-color: #f9f9f9; 
+    /* padding: 1rem 2rem; */
+    /* background-color: #f9f9f9;  */
+    background-color: #eeeeee;
     text-align: center;
     margin: 0px;
-}
-
-form {
-    width: 100%;
+    margin-top: 115px;
 }
 
 .container{
     display: block;
-    max-width: 800px;
+    max-width: 850px;
     margin: auto;
+}
+
+form {
+    width: 100%;
 }
 
 label,
@@ -27,6 +29,7 @@ label {
 }
 
 input {
+    box-sizing: border-box;
     padding: 0.5rem;
     width: 100%;
     border: 1px solid #ccc;
@@ -45,8 +48,49 @@ button {
 }
 
 .input-group {
-    text-align: left;
+    text-align: left;    
+}
+
+.input-group:not(:last-child) {
     margin-bottom: 15px; 
+}
+
+/* Header Styles */
+header {    
+    position:fixed;
+    top: 0;
+    width: 100%;
+    background-color: #405189;
+    text-align: left;
+    color: white;
+    padding: 1rem 0;    
+    box-shadow: 0 4px 15px 8px rgba(128, 128, 128, 0.25);
+}
+
+header .title {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-left: 2rem;
+}
+
+header .title img {
+    height: 40px;      
+    margin-right: 10px;  
+}
+
+header .title h1 {
+    margin: 0px;
+    font-size: 1.5rem;
+}
+
+/* Card Styles */
+.card {
+    background-color: white;
+    padding: 1.5rem 1.25rem;
+    border-radius: 0.25rem;
+    box-shadow: 0 0 1px rgba(0, 0, 0, .125), 0 1px 3px rgba(0, 0, 0, .2);
+    margin-bottom: 1.5rem;
 }
 
 /* Table Styles */
@@ -117,4 +161,14 @@ button {
 
 .completed button.complete {
     background-color: grey;
+}
+
+/* Error */
+.error {
+    background-color: #f8d7da;
+    border-color: #f1aeb5;
+    margin-top: 1rem;
+    /* margin-bottom: 1rem; */
+    padding: 1rem;
+    border-radius: .375rem;
 }
