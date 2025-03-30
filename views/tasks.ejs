@@ -42,7 +42,8 @@
               <button class="complete" type="submit"><% if (item.completed) { %> Clear <% } else { %> Complete Task  <% } %></button>
             </form>
   
-            <form method="POST" action="/delete-task/<%= item.id %>">
+            <form method="POST" action="/tasks/<%= item.id %>">
+              <input type="hidden" name="_method" value="DELETE">
               <button class="delete" type="submit">Delete</button>
             </form>
           </div>

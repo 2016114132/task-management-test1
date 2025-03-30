@@ -36,3 +36,16 @@ export const toggleCompleted = async (id) => {
       throw new Error("An error occurred while updating task.");
   }
 };
+
+export const deleteTask = async (id) => {
+  try {
+      const result = await query(
+        "DELETE FROM tasks WHERE id = $1",
+        [id]
+      );        
+      return result.rows[0];
+  } catch (error) {
+      console.error("Error updating task:", error);
+      throw new Error("An error occurred while deleting task.");
+  }
+};
