@@ -37,7 +37,8 @@
           <div class="column col1"><%= item.title %></div>
           <div class="column col2"><%= item.description %></div>
           <div class="column col3">
-            <form method="POST" action="/toggle-task/<%= item.id %>">
+            <form method="POST" action="/tasks/<%= item.id %>">
+              <input type="hidden" name="_method" value="PATCH">
               <button class="complete" type="submit"><% if (item.completed) { %> Clear <% } else { %> Complete Task  <% } %></button>
             </form>
   

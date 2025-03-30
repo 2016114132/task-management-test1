@@ -1,7 +1,8 @@
 import express from "express"
-import { getAllTasks, addNewTask }  from "../models/taskModel.js";
+import { getAllTasks, addNewTask, toggleCompleted }  from "../models/taskModel.js";
 
 const router = express.Router();
+const title = "EZ Task Manager";
 
 // Variable to store tasks in memory
 let tasks = [];
@@ -13,7 +14,7 @@ router.get("/", async (req, res) => {
         const taskList = await getAllTasks();    
 
         res.render("tasks", {
-            title: "EZ Task Manager",
+            title: title,
             tasks: taskList
         });
     }catch(error){
@@ -55,7 +56,7 @@ router.post("/tasks", async (req, res) => {
         const taskList = await getAllTasks();    
 
         return res.render("tasks", {
-            title: "Task Management",
+            title: title,
             tasks: taskList,
             error: error.message
         });
@@ -63,38 +64,74 @@ router.post("/tasks", async (req, res) => {
 });
 
 // Route to toggle the completed status of a tag by id
-router.post("/toggle-task/:id", (req, res) => {
-    // Validate that parameter exists
-    if(!req.params.id){
-        res.status(400).send('Invalid Task ID!');        
-    }
-
-    // Loop through the array of tasks to find the correct task, then update the completed status
-    tasks.forEach(item => {
-        if(item.id == req.params.id){
-            item.completed = !item.completed;
+router.patch("/tasks/:id", async (req, res) => {
+    try{
+        // Validate that parameter exists
+        if(!req.params.id){
+            throw new Error("Invalid Task ID!");     
         }
-    });
 
-    // Redirect back to '/'
-    res.redirect('/');
+        
+        // return res.status(200).send('This is the patch route!!!');
+
+
+        // Update the completed status
+        const task = await toggleCompleted(req.params.id);        
+
+        // Redirect back to '/'
+        res.redirect('/');
+    }catch(error) {
+        // When there is an error, rerender the page and pass the error message
+        const taskList = await getAllTasks();    
+
+        return res.render("tasks", {
+            title: title,
+            tasks: taskList,
+            error: error.message
+        });
+    }
 });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Route to delete a task by id
-router.post("/delete-task/:id", (req, res) => {
-    // Validate that parameter exists
-    if(!req.params.id){
-        res.status(400).send('Invalid Task ID!');        
+router.post("/delete-task/:id", async (req, res) => {
+    try{
+        // Validate that parameter exists
+        if(!req.params.id){
+            res.status(400).send('Invalid Task ID!');        
+        }
+
+        // Search for the index of the task containing the id
+        const indexToRemove = tasks.findIndex(item => item.id == req.params.id);
+
+        // Use splice to remove the item
+        tasks.splice(indexToRemove, 1);
+
+        // Redirect back to '/'
+        res.redirect('/');
+    }catch(error) {
+        // When there is an error, rerender the page and pass the error message
+        const taskList = await getAllTasks();    
+
+        return res.render("tasks", {
+            title: title,
+            tasks: taskList,
+            error: error.message
+        });
     }
-
-    // Search for the index of the task containing the id
-    const indexToRemove = tasks.findIndex(item => item.id == req.params.id);
-
-    // Use splice to remove the item
-    tasks.splice(indexToRemove, 1);
-
-    // Redirect back to '/'
-    res.redirect('/');
 });
 
 export default router
