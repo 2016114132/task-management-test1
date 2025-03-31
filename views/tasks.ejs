@@ -1,19 +1,32 @@
 <%- include("partials/header") %>
 
-  <div class="card">
-    <form method="POST" action="/tasks">
+  <% if (typeof task != "undefined") { %>   
+  <h2>Edit Task</h2>
+  <% } %>
+
+  <div class="card">    
+    <form method="POST" action="<%= typeof task == 'undefined' ? '/tasks' : '/tasks/' + task.id %>">
+
+      <% if (typeof task != "undefined") { %>   
+        <input type="hidden" name="_method" value="PUT">
+      <% } %>
+
       <div class="input-group">
         <label for="title">Title</label>
-        <input id="title" type="text" name="title" />
+        <input id="title" type="text" name="title" value="<%= typeof task == 'undefined' ? '' : task.title %>" />
       </div>
       
       <div class="input-group">
         <label for="description">Description</label>
-        <input id="description" type="text" name="description" />
+        <input id="description" type="text" name="description" value="<%= typeof task == 'undefined' ? '' : task.description %>" />
       </div>
       
       <div class="input-group">
-        <button type="submit">+ Add Task</button>
+        <button type="submit"><%= typeof task == 'undefined' ? '+ Add Task' : 'Save Task' %></button>  
+
+        <% if (typeof task != "undefined") { %>
+          <a class="button cancel" href="/">Cancel</a>      
+        <% } %>
       </div>                
     </form>
   
@@ -22,6 +35,7 @@
     <% } %>
   </div>
           
+  <% if (typeof task == "undefined") { %>   
   <div class="card">
     <h2>Task List</h2>
 
@@ -40,7 +54,9 @@
             <form method="POST" action="/tasks/<%= item.id %>">
               <input type="hidden" name="_method" value="PATCH">
               <button class="complete" type="submit"><% if (item.completed) { %> Clear <% } else { %> Complete Task  <% } %></button>
-            </form>
+            </form>            
+
+            <a class="button edit" href="/tasks/<%= item.id %>">Edit</a>
   
             <form method="POST" action="/tasks/<%= item.id %>">
               <input type="hidden" name="_method" value="DELETE">
@@ -56,5 +72,6 @@
       <p>No Tasks Found</p>
     <% } %>
   </div>
+  <% } %>
 
 <%- include("partials/footer") %>

@@ -36,7 +36,7 @@ input {
     border-radius: 4px;
 }
 
-button {
+button, .button {
     min-width: 200px;
     padding: 0.75rem;
     cursor: pointer;
@@ -45,6 +45,7 @@ button {
     border: none;
     border-radius: 4px;
     font-size: 16px;
+    text-decoration: none;
 }
 
 .input-group {
@@ -134,7 +135,7 @@ header .title h1 {
     margin-right: 5px;
 }
 
-.table button{
+.table button, .table .button{
     min-width: auto;
     padding: 0.5rem;
     cursor: pointer;
@@ -143,10 +144,15 @@ header .title h1 {
     border: none;
     border-radius: 4px;
     font-size: 14px;
+    text-decoration: none;
 }
 
 .table button.complete {
     background-color: green; 
+}
+
+.table .button.edit {
+    margin-right: 5px;
 }
 
 .table button.delete {
@@ -159,7 +165,7 @@ header .title h1 {
     text-decoration: line-through;
 }
 
-.completed button.complete {
+.completed button.complete, .button.cancel {
     background-color: grey;
 }
 

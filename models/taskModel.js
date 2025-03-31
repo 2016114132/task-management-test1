@@ -10,6 +10,31 @@ export const getAllTasks = async () => {
     }
 };
 
+export const getTask = async (id) => {
+  try {
+      const result = await query("SELECT * FROM tasks WHERE id = $1",
+        [id]
+      );
+      return result.rows[0];
+  } catch (error) {
+      console.error("Error fetching tasks:", error);
+      throw new Error("An error occurred while getting task.");
+  }
+};
+
+export const updateTask = async (id, title, description) => {
+  try {
+      const result = await query(
+        "UPDATE tasks SET title = $1, description = $2 WHERE id = $3",
+        [title, description, id]
+      );        
+      return result.rows[0];
+  } catch (error) {
+      console.error("Error updating task:", error);
+      throw new Error("An error occurred while updating task.");
+  }
+};
+
 export const addNewTask = async (title, description) => {
     try {
         const result = await query(

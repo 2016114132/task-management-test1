@@ -1,8 +1,8 @@
 import express from "express"
-import { getAllTasks, addNewTask, toggleCompleted, deleteTask }  from "../models/taskModel.js";
+import { getAllTasks, addNewTask, toggleCompleted, deleteTask, getTask, updateTask }  from "../models/taskModel.js";
 
 const router = express.Router();
-const title = "EZ Task Manager";
+const appTitle = "EZ Task Manager";
 
 // Route to show the form and task screen
 router.get("/", async (req, res) => {
@@ -11,13 +11,78 @@ router.get("/", async (req, res) => {
         const taskList = await getAllTasks();    
 
         res.render("tasks", {
-            title: title,
+            title: appTitle,
             tasks: taskList
         });
     }catch(error){
         res.status(500).send('An error occurred while getting the list of tasks.');
     }    
     
+});
+
+// Route to edit a task
+router.get("/tasks/:id", async (req, res) => {
+
+    try{
+        // Validate that parameter exists
+        if(!req.params.id){
+            throw new Error("Invalid Task ID!");     
+        }
+
+        // Get task to edit
+        const task = await getTask(req.params.id);       
+
+        res.render("tasks", {
+            title: appTitle,
+            task: task
+        });
+    }catch(error){
+        res.status(500).send('An error occurred while editing tasks.');
+    }    
+    
+});
+
+// Route to save edit task
+router.put("/tasks/:id", async (req, res) => {
+    // Extract the data from the request body
+    var { title, description } = req.body;
+
+    try{
+        // Validate that parameter exists
+        if(!req.params.id){
+            throw new Error("Invalid Task ID!");     
+        }
+
+        // Title is required, validate it was sent
+        if(!title){  
+            throw new Error("Title is required");     
+        }
+
+        // Make sure that title is between 3-100
+        if(!(title.length >= 3 && title.length <= 100)){ 
+            throw new Error("Title must be between 3-100 characters");          
+        }
+
+        // Verify that description does not exceed 500 characters
+        if(description && description.length > 500){
+            throw new Error("Description cannot exceed 500 characters");          
+        }
+
+        // Update the completed status
+        const task = await updateTask(req.params.id, title, description);        
+
+        // Redirect back to '/'
+        res.redirect('/');
+    }catch(error) {
+        // When there is an error, rerender the page and pass the error message
+        const taskList = await getAllTasks();    
+
+        return res.render("tasks", {
+            title: appTitle,
+            tasks: taskList,
+            error: error.message
+        });
+    }
 });
 
 // Route that adds a task to the array
@@ -52,7 +117,7 @@ router.post("/tasks", async (req, res) => {
         const taskList = await getAllTasks();    
 
         return res.render("tasks", {
-            title: title,
+            title: appTitle,
             tasks: taskList,
             error: error.message
         });
@@ -77,7 +142,7 @@ router.patch("/tasks/:id", async (req, res) => {
         const taskList = await getAllTasks();    
 
         return res.render("tasks", {
-            title: title,
+            title: appTitle,
             tasks: taskList,
             error: error.message
         });
@@ -102,7 +167,7 @@ router.delete("/tasks/:id", async (req, res) => {
         const taskList = await getAllTasks();    
 
         return res.render("tasks", {
-            title: title,
+            title: appTitle,
             tasks: taskList,
             error: error.message
         });
