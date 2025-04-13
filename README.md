@@ -4,6 +4,14 @@ A simple task management web app built with Node.js, Express, EJS, and PostgreSQ
 
 ---
 
+## 🎬 Demo Video
+
+This video provides a walkthrough of the EZ Task Manager, demonstrating all the core features required in the assignment:
+
+🔗 [Watch the Demo Video on YouTube](https://www.youtube.com/watch?v=NGehpw-afFU)
+
+---
+
 ## 📦 Features
 
 - Add new tasks
